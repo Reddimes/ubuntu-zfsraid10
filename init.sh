@@ -121,6 +121,9 @@ cp ./ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources
 cp /usr/share/keyrings/ubuntu-archive-keyring.gpg /mnt/usr/share/keyrings/ubuntu-archive-keyring.gpg
 rm -f /mnt/etc/apt/sources.list
 
+# Copy over zpool import service which accounts for pre and post execution.
+cp ./zfs-import-bpool.service /mnt/etc/systemd/system/zfs-import-bpool.service
+
 # Set disk for chroot.
 DISK=/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK
 ## This section needs more research.
