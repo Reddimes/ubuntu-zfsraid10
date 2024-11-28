@@ -116,13 +116,18 @@ hostname cloudstack
 hostname | sudo tee /mnt/etc/hostname
 cp ./hosts /mnt/etc/hosts
 
-
+# Copy over apt configuration and keyrings.  Remove sources.list if it even exists.  I'm not sure.
 cp ./ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources
 cp /usr/share/keyrings/ubuntu-archive-keyring.gpg /mnt/usr/share/keyrings/ubuntu-archive-keyring.gpg
-rm /mnt/etc/apt/sources.list
+rm -f /mnt/etc/apt/sources.list
 
+# Set disk for chroot.
 DISK=/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK
+## This section needs more research.
 mount --make-private --rbind /dev  /mnt/dev
 mount --make-private --rbind /proc /mnt/proc
 mount --make-private --rbind /sys  /mnt/sys
-chroot /mnt /usr/bin/env DISK=$DISK bash -c "/chroot.sh" --login
+
+# Copy over chroot.sh and run it in the chroot environment.
+cp ./chroot.sh /mnt/chroot.sh
+chroot /mnt /usr/bin/env DISK=$DISK bash --login  #-c "/chroot.sh" --login
