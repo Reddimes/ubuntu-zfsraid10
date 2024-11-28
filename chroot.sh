@@ -46,8 +46,8 @@ touch /etc/zfs/zfs-list.cache/bpool
 touch /etc/zfs/zfs-list.cache/rpool
 
 # Check the cache and make sure that it is updating
-zed -F &
-ZEDPID=$!
+# zed -F &
+# ZEDPID=$!
 
 #This is for testing
 
