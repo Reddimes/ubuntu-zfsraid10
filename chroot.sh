@@ -25,7 +25,6 @@ mount /boot/efi
 apt install --yes grub-efi-amd64 shim-signed
 
 # Add service for zfs import of the bpool
-cp ./zfs-import-bpool.service /etc/systemd/system/zfs-import-bpool.service
 systemctl enable zfs-import-bpool.service
 
 # Change to allow root to login to the server over ssh for server setup.
