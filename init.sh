@@ -210,7 +210,7 @@ prepareChroot () {
 
 runChroot () {
 	echo "Running chroot..."
-	chroot /mnt /usr/bin/env DISK=$DISK -c \"/chroot.sh\" --login
+	chroot /mnt /usr/bin/env DISK=$DISK bash -c \"/chroot.sh\" --login
 	echo "chroot complete"
 }
 
