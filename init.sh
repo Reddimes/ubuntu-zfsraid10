@@ -72,12 +72,12 @@ partition () {
 	# Ten seconds is an arbitrary number I used to delay it, it could easily be shorter
 	# and it was an arbitrary guess meant to make it work the first time.
 	echo -n "Waiting for partitions..."
-	sleep 10
+	sleep 10e
 	print_ok
 }
 
 createzpools () {
-	echo -n "Create two zpools, one for /boot, and one for the root directory(/)..."
+	echo -n "Create two zpools, one for /boot, and one for /..."
 	run_cmd "
 	zpool create \
 		-o ashift=12 \
@@ -168,11 +168,12 @@ createzpools () {
 }
 
 install () {
-	echo -n "Use debootstrap to install ubuntu on the hard drive..."
+	echo -n "Installing ubuntu on the hard drive..."
 	run_cmd "debootstrap noble /mnt http://archive.ubuntu.com/ubuntu"
 	print_ok
 
 	echo -n "Copying over files..."
+
 	# Copy zpool cache to mounted installation.
 	run_cmd "mkdir /mnt/etc/zfs"
 	run_cmd "cp /etc/zfs/zpool.cache /mnt/etc/zfs/"
@@ -209,7 +210,7 @@ prepareChroot () {
 
 runChroot () {
 	echo "Running chroot..."
-	run_cmd "chroot /mnt /usr/bin/env DISK=$DISK bash --login  #-c \"/chroot.sh\" --login"
+	chroot /mnt /usr/bin/env DISK=$DISK bash --login  #-c \"/chroot.sh\" --login
 	echo "chroot complete"
 }
 
