@@ -36,7 +36,7 @@ prequisites () {
    # Update chroot apt and install required packages.
    # Also purge os-prober as it is not needed for my environment.
    # Need to test doing a full-upgrade as well as some additional setup.
-   echo -n "Installing isntallation prerequisites..."
+   echo -ne "\tInstalling isntallation prerequisites..."
    
    run_cmd "apt update"
    run_cmd "apt install --yes console-setup locales vim systemd-timesyncd dosfstools dpkg-dev linux-headers-generic linux-image-generic zfs-initramfs openssh-server"
@@ -51,7 +51,7 @@ prequisites () {
 }
 
 bigboot () {
-   echo -n "Setup boot device integration..."
+   echo -ne "\tSetup boot device integration..."
 
    # Temporary disk to use for boot
    DISK=/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK
@@ -88,7 +88,7 @@ bigboot () {
 }
 
 fixfs () {
-   echo -n "Fix Filesystem mounting order..."
+   echo -ne "\tFix Filesystem mounting order..."
    run_cmd "mkdir /etc/zfs/zfs-list.cache"
    run_cmd "touch /etc/zfs/zfs-list.cache/bpool"
    run_cmd "touch /etc/zfs/zfs-list.cache/rpool"
