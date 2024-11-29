@@ -57,8 +57,7 @@ bigboot () {
    DISK=/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK
 
    # Create Boot partition
-   # run_cmd "mkdosfs -F 32 -s 1 -n EFI ${DISK}-part1"
-   bashmkdosfs
+   run_cmd "mkdosfs -F 32 -s 1 -n EFI ${DISK}-part1"
    run_cmd "mkdir /boot/efi"
    
    # Add to fstab
