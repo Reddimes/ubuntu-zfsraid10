@@ -192,6 +192,9 @@ install () {
 	
 	# Copy over script to be run in chroot
 	run_cmd "cp ./chroot.sh /mnt/chroot.sh"
+
+	# Copy over debug grub file
+	run_cmd "cp ./grub /etc/default/grub"
 	
 	# Copy over grub configuration.
 	########## Needs to be setup
