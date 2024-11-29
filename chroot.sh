@@ -32,14 +32,14 @@ print_ok () {
     echo -e "\e[32mOK\e[0m"
 }
 
-prequisites () {
+prerequisites () {
    # Update chroot apt and install required packages.
    # Also purge os-prober as it is not needed for my environment.
    # Need to test doing a full-upgrade as well as some additional setup.
    echo -ne "\tInstalling isntallation prerequisites..."
    
    run_cmd "apt update"
-   run_cmd "apt install --yes console-setup locales vim systemd-timesyncd dosfstools dpkg-dev linux-headers-generic linux-image-generic zfs-initramfs openssh-server"
+   apt install --yes console-setup locales vim systemd-timesyncd dosfstools dpkg-dev linux-headers-generic linux-image-generic zfs-initramfs openssh-server
    run_cmd "apt purge --yes os-prober"
 
    ## Configure distribution settings.
@@ -58,7 +58,7 @@ bigboot () {
 
    # Create Boot partition
    # run_cmd "mkdosfs -F 32 -s 1 -n EFI ${DISK}-part1"
-   bash
+   bashmkdosfs
    run_cmd "mkdir /boot/efi"
    
    # Add to fstab
