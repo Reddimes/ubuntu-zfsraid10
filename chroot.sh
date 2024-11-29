@@ -44,6 +44,8 @@ mkdir /etc/zfs/zfs-list.cache
 touch /etc/zfs/zfs-list.cache/bpool
 touch /etc/zfs/zfs-list.cache/rpool
 
+bash
+
 # Check the cache and make sure that it is updating
 # zed -F &
 # ZEDPID=$!

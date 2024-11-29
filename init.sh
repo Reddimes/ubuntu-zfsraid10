@@ -72,7 +72,7 @@ partition () {
 	# Ten seconds is an arbitrary number I used to delay it, it could easily be shorter
 	# and it was an arbitrary guess meant to make it work the first time.
 	echo -n "Waiting for partitions..."
-	sleep 10e
+	sleep 10
 	print_ok
 }
 
@@ -210,7 +210,7 @@ prepareChroot () {
 
 runChroot () {
 	echo "Running chroot..."
-	chroot /mnt /usr/bin/env DISK=$DISK bash --login  #-c \"/chroot.sh\" --login
+	chroot /mnt /usr/bin/env DISK=$DISK -c \"/chroot.sh\" --login
 	echo "chroot complete"
 }
 
