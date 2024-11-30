@@ -46,7 +46,8 @@ prerequisites () {
    dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 
    # Need to research exactly what this does, but was part of the tutorial I used to put this together.
-   echo REMAKE_INITRD=yes > /etc/dkms/zfs.conf
+   # It doesn't seem to work with Ubuntu
+   # echo REMAKE_INITRD=yes > /etc/dkms/zfs.conf
    print_ok
 }
 
@@ -98,6 +99,7 @@ fixfs () {
    zed -F &
    ZEDPID=$!
 
+   sleep 1
    while [[ ! -s /etc/zfs/zfs-list.cache/bpool || ! -s /etc/zfs/zfs-list.cache/rpool ]]
    do
       if [ $LOOP -lt 1 ]
@@ -106,8 +108,10 @@ fixfs () {
          zfs set canmount=noauto rpool/ROOT/ubuntu
       else
          kill $ZEDPID
+         sleep 1
          zed -F &
          ZEDPID=$!
+         sleep 1
       fi
       ((LOOP++))
    done
@@ -118,9 +122,10 @@ fixfs () {
 }
 
 additionalPrep () {
-   echo "We have opened bash in order for you to complete user setup.
-I Personally do not recommend setting the root password,
-but rather setting up a user such as the following:
+   echo "
+   We have opened bash in order for you to complete user setup.
+   I Personally do not recommend setting the root password,
+   but rather setting up a user such as the following:
 
       username=YOUR_USERNAME
 
@@ -130,7 +135,9 @@ but rather setting up a user such as the following:
       cp -a /etc/skel/. /home/\$username
       chown -R \$username:\$username /home/\$username
       usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username
-Once you have your user setup, just type exit in order to continue."
+
+   Once you have your user setup, just type exit in order to continue.
+   "
    bash
 }
 

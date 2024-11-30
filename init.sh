@@ -228,15 +228,18 @@ postInstall () {
    print_ok
 
 	echo -n "Attempting to unmount and export zfs..."
-	run_cmd "mount | grep -v zfs | tac | awk '/\/mnt/ {print $3}' | \
+	run_cmd "mount | grep -v zfs | tac | awk '/\/mnt/ {print \$3}' | \
 		xargs -i{} umount -lf {}"
 	run_cmd "zpool export -a"
 	print_ok
 	
-	echo -n "It may fail to export the rpool.  You will need to run the following in
+	echo -n "
+	It may fail to export the rpool.  You will need to run the following in
 	the initramfs prompt:
+
 			zpool import -f rpool
 			exit
+
 	Press Enter to continue and reboot: "
 	read
 	run_cmd "reboot 0"
