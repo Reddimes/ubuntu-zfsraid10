@@ -239,6 +239,7 @@ postInstall () {
 			exit
 	Press Enter to continue and reboot: "
 	read
+	run_cmd "reboot 0"
 }
 
 # Main Script Execution
