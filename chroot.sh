@@ -93,18 +93,49 @@ fixfs () {
    run_cmd "touch /etc/zfs/zfs-list.cache/bpool"
    run_cmd "touch /etc/zfs/zfs-list.cache/rpool"
    print_ok
+
    # Check the cache and make sure that it is updating
-   # zed -F &
-   # ZEDPID=$!
+   zed -F &
+   ZEDPID=$!
 
-   #This is for testing
+   while [[ ! -s /etc/zfs/zfs-list.cache/bpool || ! -s /etc/zfs/zfs-list.cache/rpool ]]
+   do
+      if [ $LOOP -lt 1 ]
+      then
+         zfs set canmount=on bpool/BOOT/ubuntu
+         zfs set canmount=noauto rpool/ROOT/ubuntu
+      else
+         kill $ZEDPID
+         zed -F &
+         ZEDPID=$!
+      fi
+      ((LOOP++))
+   done
+   kill $ZEDPID
 
+   # Fix Mount paths
+   sed -Ei "s|/mnt/?|/|" /etc/zfs/zfs-list.cache/*
+}
 
-   # Need to copy DISK-part1 to other disks-part1
+additionalPrep () {
+   echo "We have opened bash in order for you to complete user setup.
+I Personally do not recommend setting the root password,
+but rather setting up a user such as the following:
+
+      username=YOUR_USERNAME
+
+      zfs create rpool/home/\$username
+      adduser \$username
+
+      cp -a /etc/skel/. /home/\$username
+      chown -R \$username:\$username /home/\$username
+      usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username
+Once you have your user setup, just type exit in order to continue."
+   bash
 }
 
 # Main Script Execution
 prerequisites
 bigboot
 fixfs
-bash
+additionalPrep

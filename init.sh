@@ -216,6 +216,31 @@ runChroot () {
 	echo "Done!"
 }
 
+postInstall () {
+	echo -n "Removing chroot script from dataset..."
+	run_cmd "rm -f /mnt/chroot.sh"
+	print_ok
+
+
+   echo -n "Creating Installation Snapshot..."
+   run_cmd "zfs snapshot bpool/BOOT/ubuntu@install"
+   run_cmd "zfs snapshot rpool/ROOT/ubuntu@install"
+   print_ok
+
+	echo -n "Attempting to unmount and export zfs..."
+	run_cmd "mount | grep -v zfs | tac | awk '/\/mnt/ {print $3}' | \
+		xargs -i{} umount -lf {}"
+	run_cmd "zpool export -a"
+	print_ok
+	
+	echo -n "It may fail to export the rpool.  You will need to run the following in
+	the initramfs prompt:
+			zpool import -f rpool
+			exit
+	Press Enter to continue and reboot: "
+	read
+}
+
 # Main Script Execution
 prerequisites
 partition
@@ -223,3 +248,4 @@ createzpools
 install
 prepareChroot
 runChroot
+postInstall
