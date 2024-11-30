@@ -39,11 +39,12 @@ prerequisites () {
    echo -ne "\tInstalling isntallation prerequisites..."
    
    run_cmd "apt update"
-   apt install --yes console-setup locales vim systemd-timesyncd dosfstools dpkg-dev linux-headers-generic linux-image-generic zfs-initramfs openssh-server
+   run_cmd "apt install --yes console-setup locales vim systemd-timesyncd dosfstools \
+      dpkg-dev linux-headers-generic linux-image-generic zfs-initramfs openssh-server"
    run_cmd "apt purge --yes os-prober"
 
    ## Configure distribution settings.
-   run_cmd "dpkg-reconfigure locales tzdata keyboard-configuration console-setup"
+   dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 
    # Need to research exactly what this does, but was part of the tutorial I used to put this together.
    run_cmd "echo REMAKE_INITRD=yes > /etc/dkms/zfs.conf"
