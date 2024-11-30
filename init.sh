@@ -230,7 +230,7 @@ postInstall () {
 	echo -n "Attempting to unmount and export zfs..."
 	run_cmd "mount | grep -v zfs | tac | awk '/\/mnt/ {print \$3}' | \
 		xargs -i{} umount -lf {}"
-	run_cmd "zpool export -a"
+	zpool export -a
 	print_ok
 	
 	echo -n "

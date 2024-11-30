@@ -36,13 +36,14 @@ prerequisites () {
    # Also purge os-prober as it is not needed for my environment.
    # Need to test doing a full-upgrade as well as some additional setup.
    echo -ne "\tInstalling prerequisites..."
-   
    run_cmd "apt update"
    run_cmd "apt install --yes console-setup locales vim systemd-timesyncd dosfstools \
       dpkg-dev linux-headers-generic linux-image-generic zfs-initramfs openssh-server"
    run_cmd "apt purge --yes os-prober"
+   print_ok
 
-   ## Configure distribution settings.
+   echo "Configuring distribution settings...
+   "
    dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 
    # Need to research exactly what this does, but was part of the tutorial I used to put this together.
@@ -96,7 +97,7 @@ fixfs () {
    print_ok
 
    # Check the cache and make sure that it is updating
-   zed -F &
+   zed -F &> /dev/null &
    ZEDPID=$!
 
    sleep 1
@@ -109,7 +110,7 @@ fixfs () {
       else
          kill $ZEDPID
          sleep 1
-         zed -F &
+         zed -F &> /dev/null &
          ZEDPID=$!
          sleep 1
       fi
