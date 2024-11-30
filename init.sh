@@ -5,7 +5,6 @@ error_handler() {
     local exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo -e "\e[31mThe script exited with status ${exit_code}.\e[0m" 1>&2
-        cleanup
         exit ${exit_code}
     fi
 }
@@ -34,7 +33,7 @@ print_ok () {
 
 prerequisites () {
 	echo -n "Installing prerequisites..."
-	run_cmd "apt install debootstrap gdisk zfsutils-linux -y"
+	run_cmd "apt install --yes debootstrap gdisk zfsutils-linux"
 	print_ok
 }
 

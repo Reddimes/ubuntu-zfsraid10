@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # Function to handle errors
-error_handler() {
+error_handler () {
     local exit_code=$?
     if [ $exit_code -ne 0 ]; then
         echo -e "\e[31mThe script exited with status ${exit_code}.\e[0m" 1>&2
-        cleanup
         exit ${exit_code}
     fi
 }
@@ -13,7 +12,7 @@ error_handler() {
 trap error_handler EXIT
 
 # Function to run commands and capture stderr
-run_cmd() {
+run_cmd () {
     local cmd="$1"
     local stderr_file=$(mktemp)
 
@@ -36,7 +35,7 @@ prerequisites () {
    # Update chroot apt and install required packages.
    # Also purge os-prober as it is not needed for my environment.
    # Need to test doing a full-upgrade as well as some additional setup.
-   echo -ne "\tInstalling isntallation prerequisites..."
+   echo -ne "\tInstalling prerequisites..."
    
    run_cmd "apt update"
    run_cmd "apt install --yes console-setup locales vim systemd-timesyncd dosfstools \
@@ -47,7 +46,7 @@ prerequisites () {
    dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 
    # Need to research exactly what this does, but was part of the tutorial I used to put this together.
-   run_cmd "echo REMAKE_INITRD=yes > /etc/dkms/zfs.conf"
+   echo REMAKE_INITRD=yes > /etc/dkms/zfs.conf
    print_ok
 }
 
@@ -94,18 +93,18 @@ fixfs () {
    run_cmd "touch /etc/zfs/zfs-list.cache/bpool"
    run_cmd "touch /etc/zfs/zfs-list.cache/rpool"
    print_ok
+   # Check the cache and make sure that it is updating
+   # zed -F &
+   # ZEDPID=$!
+
+   #This is for testing
+
+
+   # Need to copy DISK-part1 to other disks-part1
 }
 
+# Main Script Execution
 prerequisites
 bigboot
 fixfs
 bash
-
-# Check the cache and make sure that it is updating
-# zed -F &
-# ZEDPID=$!
-
-#This is for testing
-
-
-# Need to copy DISK-part1 to other disks-part1
