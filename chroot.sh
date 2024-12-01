@@ -42,8 +42,7 @@ prerequisites () {
    run_cmd "apt purge --yes os-prober"
    print_ok
 
-   echo "Configuring distribution settings...
-   "
+   echo -e "Configuring distribution settings...\n"
    dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 
    # Need to research exactly what this does, but was part of the tutorial I used to put this together.
