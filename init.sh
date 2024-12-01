@@ -225,7 +225,7 @@ prepareChroot () {
 
 runChroot () {
 	echo -e "\nRunning chroot:"
-	chroot /mnt /usr/bin/env DISK=${DISKS[0]} bash -c \"/chroot.sh\" --login
+	chroot /mnt /usr/bin/env DISK="/dev/disk/by-id/${DISKS[0]}" bash -c \"/chroot.sh\" --login
 	echo "Done!"
 }
 
@@ -265,4 +265,4 @@ createzpools
 install
 prepareChroot
 runChroot
-# postInstall
+postInstall

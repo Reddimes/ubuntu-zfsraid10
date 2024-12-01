@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo $DISK
-exit
-
 # Function to handle errors
 error_handler () {
     local exit_code=$?
@@ -57,9 +54,6 @@ prerequisites () {
 
 bigboot () {
    echo -n "Setup boot device integration..."
-
-   # Temporary disk to use for boot
-   DISK=/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK
 
    # Create Boot partition
    run_cmd "mkdosfs -F 32 -s 1 -n EFI ${DISK}-part1"
