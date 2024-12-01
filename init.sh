@@ -8,7 +8,7 @@ ls -A /dev/disk/by-id/ | sed '/-part/d;/usb/d' -
 DISKS=()
 
 echo -e "\nDisks to use. Copy and paste from above. Enter an empty string to end: "
-
+# Gather DISKS for use.
 while true
 do
 	# echo -n "Disk-${#DISKS[@]}: "
@@ -29,6 +29,13 @@ do
 	fi
 	DISKS+=($input)
 done
+
+echo -ne "\nEnter the desired hostname[hostname:-root]: "
+read hostname
+hostname = ${hostname:-$(cat /etc/hostname)}
+echo $hostname
+exit
+
 
 # Function to handle errors
 error_handler() {
@@ -192,8 +199,8 @@ install () {
 	run_cmd "cp /etc/zfs/zpool.cache /mnt/etc/zfs/"
 
 	# Networking setup
-	run_cmd "echo cloudstack | sudo tee /mnt/etc/hostname"
-	run_cmd "sed 's/ubuntu-server/cloudstack/' /etc/hosts > /mnt/etc/hosts"
+	run_cmd "echo $hostname > /mnt/etc/hostname"
+	run_cmd "sed 's/ubuntu-server/$hostname' /etc/hosts > /mnt/etc/hosts"
 	run_cmd "cp /etc/netplan/50-cloud-init.yaml /mnt/etc/netplan/50-cloud-init.yaml"
 
 	# Copy over apt configuration and keyrings.  Remove sources.list if it even exists.  I'm not sure.
