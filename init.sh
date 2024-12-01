@@ -31,7 +31,7 @@ do
 done
 
 echo -ne "\nEnter the desired hostname[hostname:-testing]: "
-read hostname
+read HOSTNAME
 HOSTNAME = ${HOSTNAME:-$(cat /etc/hostname)}
 echo $hostname
 exit
