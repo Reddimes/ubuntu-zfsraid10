@@ -2,9 +2,7 @@
 
 TDIR=$(mktemp -d)
 echo $TDIR
-echo $(pwd)
 cd $TDIR
-echo $(pwd)
-git clone --depth 1 https://github.com/Reddimes/ubuntu-zfsraid10.git ./
+git clone --depth 1 https://github.com/Reddimes/ubuntu-zfsraid10.git ./ &> /dev/null
 chmod +x *.sh
-sudo ./init.sh
+sudo ./init.sh"
