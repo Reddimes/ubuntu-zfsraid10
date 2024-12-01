@@ -1,7 +1,6 @@
 #!/bin/bash
 
 TDIR=$(mktemp -d)
-echo $TDIR
 cd $TDIR
 git clone --depth 1 https://github.com/Reddimes/ubuntu-zfsraid10.git ./ &> /dev/null
 chmod +x *.sh
