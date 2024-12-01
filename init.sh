@@ -1,34 +1,66 @@
 #!/bin/bash
 
+# Gather user input
+clear
+echo -e "Here is the list of disks installed on your system: -part is ignored and usb is ignored:"
+ls -lA /dev/disk/by-id/ | sed '/-part/d;/usb/d' -
+
+DISKS=()
+
+echo "Disks to use. Enter an empty string to end: "
+
+while true
+do
+	echo -n "Disk-${#DISKS[@]}: "
+	read input
+	if [[ $input = "" ]]
+	then
+		if ((${#DISKS[@]} >= 4))
+		then
+			break
+		else
+			echo "You need at least 4 disks for a ZFS RAID 10."
+		fi
+	fi
+	DISKS+=($input)
+done
+
+for ((i=0; i<${#DISKS[@]}; i++))
+do
+	DISKS[$i]="/dev/disk/by-id/${DISKS[i]}"
+done
+
+exit
+
 # Function to handle errors
 error_handler() {
-    local exit_code=$?
-    if [ $exit_code -ne 0 ]; then
-        echo -e "\e[31mThe script exited with status ${exit_code}.\e[0m" 1>&2
-        exit ${exit_code}
-    fi
+	local exit_code=$?
+	if [ $exit_code -ne 0 ]; then
+		echo -e "\e[31mThe script exited with status ${exit_code}.\e[0m" 1>&2
+		exit ${exit_code}
+	fi
 }
 
 trap error_handler EXIT
 
 # Function to run commands and capture stderr
 run_cmd() {
-    local cmd="$1"
-    local stderr_file=$(mktemp)
+	local cmd="$1"
+	local stderr_file=$(mktemp)
 
-    if ! eval "$cmd" > /dev/null 2>$stderr_file; then
-        echo -e "\e[31mError\n Command '$cmd' failed with output:\e[0m" 1>&2
-        cat $stderr_file | awk '{print " \033[31m" $0 "\033[0m"}' 1>&2
-        rm -f $stderr_file
-        exit 1
-    fi
+	if ! eval "$cmd" > /dev/null 2>$stderr_file; then
+		echo -e "\e[31mError\n Command '$cmd' failed with output:\e[0m" 1>&2
+		cat $stderr_file | awk '{print " \033[31m" $0 "\033[0m"}' 1>&2
+		rm -f $stderr_file
+		exit 1
+	fi
 
-    rm -f $stderr_file
+	rm -f $stderr_file
 }
 
 # Function to print OK message in green
 print_ok () {
-    echo -e "\e[32mOK\e[0m"
+	echo -e "\e[32mOK\e[0m"
 }
 
 prerequisites () {
@@ -79,40 +111,40 @@ createzpools () {
 	echo -n "Create two zpools, one for /boot, and one for /..."
 	run_cmd "
 	zpool create \
-		-o ashift=12 \
-		-o autotrim=on \
-		-o compatibility=grub2 \
-		-o cachefile=/etc/zfs/zpool.cache \
-		-O devices=off \
-		-O acltype=posixacl -O xattr=sa \
-		-O compression=lz4 \
-		-O normalization=formD \
-		-O relatime=on \
-		-O canmount=off -O mountpoint=/boot -R /mnt \
-			bpool \
-				mirror \
-					/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK-part2 \
-					/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X-part2 \
-				mirror \
-					/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG-part2 \
-					/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7-part2 -f"
+	-o ashift=12 \
+	-o autotrim=on \
+	-o compatibility=grub2 \
+	-o cachefile=/etc/zfs/zpool.cache \
+	-O devices=off \
+	-O acltype=posixacl -O xattr=sa \
+	-O compression=lz4 \
+	-O normalization=formD \
+	-O relatime=on \
+	-O canmount=off -O mountpoint=/boot -R /mnt \
+	bpool \
+	mirror \
+	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK-part2 \
+	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X-part2 \
+	mirror \
+	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG-part2 \
+	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7-part2 -f"
 	
 	run_cmd "
 	zpool create \
-		-o ashift=12 \
-		-o autotrim=on \
-		-O acltype=posixacl -O xattr=sa -O dnodesize=auto \
-		-O compression=lz4 \
-		-O normalization=formD \
-		-O relatime=on \
-		-O canmount=off -O mountpoint=/ -R /mnt \
-			rpool \
-				mirror \
-					/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK-part3 \
-					/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X-part3 \
-				mirror \
-					/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG-part3 \
-					/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7-part3 -f"
+	-o ashift=12 \
+	-o autotrim=on \
+	-O acltype=posixacl -O xattr=sa -O dnodesize=auto \
+	-O compression=lz4 \
+	-O normalization=formD \
+	-O relatime=on \
+	-O canmount=off -O mountpoint=/ -R /mnt \
+	rpool \
+	mirror \
+	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK-part3 \
+	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X-part3 \
+	mirror \
+	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG-part3 \
+	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7-part3 -f"
 	print_ok
 
 	echo -n "Configuring zpools..."
@@ -233,7 +265,7 @@ postInstall () {
 
 	echo -n "Attempting to unmount and export zfs..."
 	run_cmd "mount | grep -v zfs | tac | awk '/\/mnt/ {print \$3}' | \
-		xargs -i{} umount -lf {}"
+	xargs -i{} umount -lf {}"
 	zpool export -a &> /dev/null
 	print_ok
 	
