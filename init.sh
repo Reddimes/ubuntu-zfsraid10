@@ -179,10 +179,11 @@ install () {
 
 	# Networking setup
 	run_cmd "echo cloudstack | sudo tee /mnt/etc/hostname"
-	run_cmd "cp ./hosts /mnt/etc/hosts"
+	run_cmd "sed 's/ubuntu-server/cloudstack/' /etc/hosts > /mnt/etc/hosts"
+	run_cmd "cp /etc/netplan/50-cloud-init.yaml /mnt/netplan/50-cloud-init.yaml"
 
 	# Copy over apt configuration and keyrings.  Remove sources.list if it even exists.  I'm not sure.
-	run_cmd "cp ./ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources"
+	run_cmd "cp /etc/apt/sources.list.d/ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources"
 	run_cmd "cp /usr/share/keyrings/ubuntu-archive-keyring.gpg /mnt/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 	run_cmd "rm -f /mnt/etc/apt/sources.list"
 
@@ -193,7 +194,7 @@ install () {
 	run_cmd "cp ./chroot.sh /mnt/chroot.sh"
 
 	# Copy over debug grub file
-	run_cmd "cp ./grub /etc/default/grub"
+	run_cmd "cp ./grub /mnt/etc/default/grub"
 	
 	# Copy over grub configuration.
 	########## Needs to be setup
@@ -221,11 +222,14 @@ postInstall () {
 	run_cmd "rm -f /mnt/chroot.sh"
 	print_ok
 
+	echo -n " Copying over first_boot.sh..."
+	run_cmd "cp ./first_boot.sh /mnt/etc/profile.d/first_boot.sh"
+	print_ok
 
-   echo -n "Creating Installation Snapshot..."
-   run_cmd "zfs snapshot bpool/BOOT/ubuntu@install"
-   run_cmd "zfs snapshot rpool/ROOT/ubuntu@install"
-   print_ok
+	echo -n "Creating Installation Snapshot..."
+	run_cmd "zfs snapshot bpool/BOOT/ubuntu@install"
+	run_cmd "zfs snapshot rpool/ROOT/ubuntu@install"
+	print_ok
 
 	echo -n "Attempting to unmount and export zfs..."
 	run_cmd "mount | grep -v zfs | tac | awk '/\/mnt/ {print \$3}' | \
