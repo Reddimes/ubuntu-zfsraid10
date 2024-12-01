@@ -197,7 +197,7 @@ install () {
 	run_cmd "cp ./grub /mnt/etc/default/grub"
 	
 	# Copy over grub configuration.
-	########## Needs to be setup
+	########## Needs to be setup test
 	
 	print_ok
 }
