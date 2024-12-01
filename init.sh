@@ -32,7 +32,7 @@ done
 
 echo -ne "\nEnter the desired hostname[hostname:-testing]: "
 read HOSTNAME
-HOSTNAME= "${HOSTNAME:-$(cat /etc/hostname)}"
+HOSTNAME=${HOSTNAME:-ubuntu-server}
 echo $hostname
 exit
 
