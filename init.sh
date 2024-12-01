@@ -25,15 +25,38 @@ do
 	DISKS+=($input)
 done
 
-for ((i=0; i<${#DISKS[@]}; i++))
+bpool="zpool create \
+-o ashift=12 \
+-o autotrim=on \
+-o compatibility=grub2 \
+-o cachefile=/etc/zfs/zpool.cache \
+-O devices=off \
+-O acltype=posixacl -O xattr=sa \
+-O compression=lz4 \
+-O normalization=formD \
+-O relatime=on \
+-O canmount=off -O mountpoint=/boot -R /mnt \
+bpool \
+"
+
+rpool="zpool create \
+-o ashift=12 \
+-o autotrim=on \
+-O acltype=posixacl -O xattr=sa -O dnodesize=auto \
+-O compression=lz4 \
+-O normalization=formD \
+-O relatime=on \
+-O canmount=off -O mountpoint=/ -R /mnt \
+rpool \
+"
+
+for ((i=0; i<${#DISKS[@]}; i+=2))
 do
-	DISKS[$i]="/dev/disk/by-id/${DISKS[i]}"
+	bpool+="mirror \\\n"
+	# ="/dev/disk/by-id/${DISKS[i]}"
 done
 
-for ((i=0; i<${#DISKS[@]}; i++))
-do
-	echo ${DISKS[i]}
-done
+echo $bpool
 
 exit
 
