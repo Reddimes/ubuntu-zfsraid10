@@ -30,9 +30,9 @@ do
 	DISKS+=($input)
 done
 
-echo -ne "\nEnter the desired hostname[hostname:-root]: "
+echo -ne "\nEnter the desired hostname[hostname:-testing]: "
 read hostname
-hostname = ${hostname:-$(cat /etc/hostname)}
+HOSTNAME = ${HOSTNAME:-$(cat /etc/hostname)}
 echo $hostname
 exit
 
