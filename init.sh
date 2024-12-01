@@ -104,9 +104,8 @@ rpool "
 		rpool+="/dev/disk/by-id/${DISKS[i]}-part3 "
 		rpool+="/dev/disk/by-id/${DISKS[i+1]}-part3 "
 	done
-
-	echo $bpool
-	echo $rpool
+	bpool+="-f"
+	rpool+="-f"
 
 	echo -n "Wiping Filesystems, Zapping Partitions, and Creating New Partitions..."
 	for ((i=0; i<${#DISKS[@]}; i++))
@@ -126,50 +125,12 @@ rpool "
 }
 
 createzpools () {
-	echo $bpool
-	echo $rpool
-	exit
 	echo -n "Create two zpools, one for /boot, and one for /..."
-	run_cmd "
-	zpool create \
-	-o ashift=12 \
-	-o autotrim=on \
-	-o compatibility=grub2 \
-	-o cachefile=/etc/zfs/zpool.cache \
-	-O devices=off \
-	-O acltype=posixacl -O xattr=sa \
-	-O compression=lz4 \
-	-O normalization=formD \
-	-O relatime=on \
-	-O canmount=off -O mountpoint=/boot -R /mnt \
-	bpool \
-	mirror \
-	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK-part2 \
-	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X-part2 \
-	mirror \
-	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG-part2 \
-	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7-part2 -f"
-	
-	run_cmd "
-	zpool create \
-	-o ashift=12 \
-	-o autotrim=on \
-	-O acltype=posixacl -O xattr=sa -O dnodesize=auto \
-	-O compression=lz4 \
-	-O normalization=formD \
-	-O relatime=on \
-	-O canmount=off -O mountpoint=/ -R /mnt \
-	rpool \
-	mirror \
-	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK-part3 \
-	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X-part3 \
-	mirror \
-	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG-part3 \
-	/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7-part3 -f"
+	run_cmd "$bpool"
+	run_cmd "$rpool"
 	print_ok
 
 	echo -n "Configuring zpools..."
-
 	# zpool configuration
 	run_cmd "zfs create -o canmount=off -o mountpoint=none rpool/ROOT"
 	run_cmd "zfs create -o canmount=off -o mountpoint=none bpool/BOOT"
@@ -257,7 +218,7 @@ install () {
 
 prepareChroot () {
 	# Set disk for chroot. This is temporary.
-	DISK=/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK
+	DISK=${DISKS[0]}
 	## This section needs more research.
 	run_cmd "mount --make-private --rbind /dev  /mnt/dev"
 	run_cmd "mount --make-private --rbind /proc /mnt/proc"
@@ -303,7 +264,7 @@ postInstall () {
 prerequisites
 partition
 createzpools
-install
-prepareChroot
-runChroot
-postInstall
+# install
+# prepareChroot
+# runChroot
+# postInstall
