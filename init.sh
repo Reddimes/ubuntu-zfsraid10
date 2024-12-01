@@ -264,5 +264,5 @@ partition
 createzpools
 install
 prepareChroot
-# runChroot
+runChroot
 # postInstall
