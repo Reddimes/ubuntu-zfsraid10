@@ -105,6 +105,9 @@ rpool "
 		rpool+="/dev/disk/by-id/${DISKS[i+1]}-part3 "
 	done
 
+	echo $bpool
+	echo $rpool
+
 	echo -n "Wiping Filesystems, Zapping Partitions, and Creating New Partitions..."
 	for ((i=0; i<${#DISKS[@]}; i++))
 	do
