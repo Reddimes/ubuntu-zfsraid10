@@ -217,9 +217,7 @@ install () {
 }
 
 prepareChroot () {
-	# Set disk for chroot. This is temporary.
-	DISK=${DISKS[0]}
-	## This section needs more research.
+	# This section needs more research.
 	run_cmd "mount --make-private --rbind /dev  /mnt/dev"
 	run_cmd "mount --make-private --rbind /proc /mnt/proc"
 	run_cmd "mount --make-private --rbind /sys  /mnt/sys"
@@ -227,7 +225,7 @@ prepareChroot () {
 
 runChroot () {
 	echo -e "\nRunning chroot:"
-	chroot /mnt /usr/bin/env DISK=$DISK bash -c \"/chroot.sh\" --login
+	chroot /mnt /usr/bin/env DISK=${DISKS[0]} bash -c \"/chroot.sh\" --login
 	echo "Done!"
 }
 
