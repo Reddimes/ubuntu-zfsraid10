@@ -212,7 +212,7 @@ prepareChroot () {
 }
 
 runChroot () {
-	echo "Running chroot:"
+	echo -e "\nRunning chroot:"
 	chroot /mnt /usr/bin/env DISK=$DISK bash -c \"/chroot.sh\" --login
 	echo "Done!"
 }
@@ -234,17 +234,14 @@ postInstall () {
 	echo -n "Attempting to unmount and export zfs..."
 	run_cmd "mount | grep -v zfs | tac | awk '/\/mnt/ {print \$3}' | \
 		xargs -i{} umount -lf {}"
-	zpool export -a
+	zpool export -a &> /dev/null
 	print_ok
 	
-	echo -n "
-It may fail to export the rpool.  You will need to run the following in
-the initramfs prompt:
-
-	zpool import -f rpool
-	exit
-
-Press Enter to continue and reboot: "
+	echo -e "\nIt may fail to export the rpool.  You will need to run the following in"
+	echo -e "the initramfs prompt:\n"
+	echo -e "\n\tzpool import -f rpool"
+	echo -e "\texit"
+	echo -n "Press Enter to continue and reboot: "
 	read
 	run_cmd "reboot 0"
 }

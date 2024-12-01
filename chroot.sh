@@ -35,7 +35,7 @@ prerequisites () {
    # Update chroot apt and install required packages.
    # Also purge os-prober as it is not needed for my environment.
    # Need to test doing a full-upgrade as well as some additional setup.
-   echo -ne "\tInstalling prerequisites..."
+   echo -n "Installing chroot prerequisites..."
    run_cmd "apt update"
    run_cmd "apt install --yes console-setup locales vim systemd-timesyncd dosfstools \
       dpkg-dev linux-headers-generic linux-image-generic zfs-initramfs openssh-server"
@@ -53,7 +53,7 @@ prerequisites () {
 }
 
 bigboot () {
-   echo -ne "\tSetup boot device integration..."
+   echo -n "Setup boot device integration..."
 
    # Temporary disk to use for boot
    DISK=/dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK
@@ -90,7 +90,7 @@ bigboot () {
 }
 
 fixfs () {
-   echo -ne "\tFix Filesystem mounting order..."
+   echo -n "Fix Filesystem mounting order..."
    run_cmd "mkdir /etc/zfs/zfs-list.cache"
    run_cmd "touch /etc/zfs/zfs-list.cache/bpool"
    run_cmd "touch /etc/zfs/zfs-list.cache/rpool"
@@ -123,22 +123,17 @@ fixfs () {
 }
 
 additionalPrep () {
-   echo "
-We have opened bash in order for you to complete user setup.
-I Personally do not recommend setting the root password,
-but rather setting up a user such as the following:
+   echo -e "\nWe have opened bash in order for you to complete user setup."
+   echo "I Personally do not recommend setting the root password,"
+   echo -e "but rather setting up a user such as the following:\n"
 
-   username=YOUR_USERNAME
-
-   zfs create rpool/home/\$username
-   adduser \$username
-
-   cp -a /etc/skel/. /home/\$username
-   chown -R \$username:\$username /home/\$username
-   usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username
-
-Once you have your user setup, just type exit in order to continue.
-"
+   echo -e "\tusername=YOUR_USERNAME\n"
+   echo -e "\tzfs create rpool/home/\$username"
+   echo -e "\tadduser \$username\n"
+   echo -e "\tcp -a /etc/skel/. /home/\$username"
+   echo -e "\tchown -R \$username:\$username /home/\$username"
+   echo -e "\tusermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username\n"
+   echo -e "Once you have your user setup, just type exit in order to continue.\n"
    bash
 }
 
