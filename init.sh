@@ -7,64 +7,28 @@ ls -A /dev/disk/by-id/ | sed '/-part/d;/usb/d' -
 
 DISKS=()
 
-echo -e "\nDisks to use. Enter an empty string to end: "
+echo -e "\nDisks to use. Copy and paste from above. Enter an empty string to end: "
 
 while true
 do
-	echo -n "Disk-${#DISKS[@]}: "
+	# echo -n "Disk-${#DISKS[@]}: "
 	read input
 	if [[ $input = "" ]]
 	then
 		if ((${#DISKS[@]} >= 4))
 		then
-			break
+			if ((${#DISKS[@]} % 2 == 0))
+			then
+				break
+			else
+				echo "You need an even number of disks for a ZFS RAID 10."
+			fi
 		else
 			echo "You need at least 4 disks for a ZFS RAID 10."
 		fi
 	fi
 	DISKS+=($input)
 done
-
-bpool="zpool create \
--o ashift=12 \
--o autotrim=on \
--o compatibility=grub2 \
--o cachefile=/etc/zfs/zpool.cache \
--O devices=off \
--O acltype=posixacl -O xattr=sa \
--O compression=lz4 \
--O normalization=formD \
--O relatime=on \
--O canmount=off -O mountpoint=/boot -R /mnt \
-bpool \
-"
-
-rpool="zpool create \
--o ashift=12 \
--o autotrim=on \
--O acltype=posixacl -O xattr=sa -O dnodesize=auto \
--O compression=lz4 \
--O normalization=formD \
--O relatime=on \
--O canmount=off -O mountpoint=/ -R /mnt \
-rpool \
-"
-
-for ((i=0; i<${#DISKS[@]}; i+=2))
-do
-	bpool+="mirror "
-	bpool+="/dev/disk/by-id/${DISKS[i]}-part2 "
-	bpool+="/dev/disk/by-id/${DISKS[i+1]}-part2 "
-
-	rpool+="mirror "
-	rpool+="/dev/disk/by-id/${DISKS[i]}-part3 "
-	rpool+="/dev/disk/by-id/${DISKS[i+1]}-part3 "
-done
-
-echo $bpool
-echo $rpool
-
-exit
 
 # Function to handle errors
 error_handler() {
@@ -104,44 +68,64 @@ prerequisites () {
 }
 
 partition () {
-	echo -n "Wiping filesystems..."
-	run_cmd "wipefs -a /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK"
-	run_cmd "wipefs -a /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X"
-	run_cmd "wipefs -a /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7"
-	run_cmd "wipefs -a /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG"
-	print_ok
+	# Initial bpool Creation
+	bpool="zpool create \
+-o ashift=12 \
+-o autotrim=on \
+-o compatibility=grub2 \
+-o cachefile=/etc/zfs/zpool.cache \
+-O devices=off \
+-O acltype=posixacl -O xattr=sa \
+-O compression=lz4 \
+-O normalization=formD \
+-O relatime=on \
+-O canmount=off -O mountpoint=/boot -R /mnt \
+bpool "
 
-	echo -n "Zapping partitions..."
-	run_cmd "sgdisk --zap-all /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK"
-	run_cmd "sgdisk --zap-all /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X"
-	run_cmd "sgdisk --zap-all /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7"
-	run_cmd "sgdisk --zap-all /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG"
-	print_ok
+# Initial rpool Creation
+	rpool="zpool create \
+-o ashift=12 \
+-o autotrim=on \
+-O acltype=posixacl -O xattr=sa -O dnodesize=auto \
+-O compression=lz4 \
+-O normalization=formD \
+-O relatime=on \
+-O canmount=off -O mountpoint=/ -R /mnt \
+rpool "
 
-	echo -n "Creating partitions..."
-	run_cmd "sgdisk     -n1:1M:+512M   -t1:EF00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK"
-	run_cmd "sgdisk     -n1:1M:+512M   -t1:EF00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X"
-	run_cmd "sgdisk     -n1:1M:+512M   -t1:EF00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7"
-	run_cmd "sgdisk     -n1:1M:+512M   -t1:EF00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG"
-	run_cmd "sgdisk     -n2:0:+1G      -t2:BE00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK"
-	run_cmd "sgdisk     -n2:0:+1G      -t2:BE00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X"
-	run_cmd "sgdisk     -n2:0:+1G      -t2:BE00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7"
-	run_cmd "sgdisk     -n2:0:+1G      -t2:BE00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG"
-	run_cmd "sgdisk     -n3:0:0        -t3:BF00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV58DGK"
-	run_cmd "sgdisk     -n3:0:0        -t3:BF00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV42Y5X"
-	run_cmd "sgdisk     -n3:0:0        -t3:BF00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4HRM7"
-	run_cmd "sgdisk     -n3:0:0        -t3:BF00 /dev/disk/by-id/ata-ST12000VN0007-2GS116_ZJV4Q8GG"
-	print_ok
+	# Customize with user entered Disks
+	for ((i=0; i<${#DISKS[@]}; i+=2))
+	do
+		bpool+="mirror "
+		bpool+="/dev/disk/by-id/${DISKS[i]}-part2 "
+		bpool+="/dev/disk/by-id/${DISKS[i+1]}-part2 "
+
+		rpool+="mirror "
+		rpool+="/dev/disk/by-id/${DISKS[i]}-part3 "
+		rpool+="/dev/disk/by-id/${DISKS[i+1]}-part3 "
+	done
+
+	echo -n "Wiping Filesystems, Zapping Partitions, and Creating New Partitions..."
+	for ((i=0; i<${#DISKS[@]}; i++))
+	do
+		run_cmd "wipefs -a /dev/disk/by-id/${DISK[i]}"
+		run_cmd "sgdisk --zap-all /dev/disk/by-id/${DISK[i]}"
+		run_cmd "sgdisk -n1:1M:+512M -t1:EF00 /dev/disk/by-id/${DISK[i]}"
+		run_cmd "sgdisk -n2:0:+1G -t2:BE00 /dev/disk/by-id/${DISK[i]}"
+		run_cmd "sgdisk -n3:0:0 -t3:BF00 /dev/disk/by-id/${DISK[i]}"
+	done
 
 	# Sleep to allow time for partitions to be detected by zpool
 	# Ten seconds is an arbitrary number I used to delay it, it could easily be shorter
 	# and it was an arbitrary guess meant to make it work the first time.
-	echo -n "Waiting for partitions..."
 	sleep 10
 	print_ok
 }
 
 createzpools () {
+	echo $bpool
+	echo $rpool
+	exit
 	echo -n "Create two zpools, one for /boot, and one for /..."
 	run_cmd "
 	zpool create \
