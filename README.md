@@ -25,7 +25,9 @@ It also copies over the `/etc/apt/sources.list.d/ubuntu.sources` and `/usr/share
 There are four total scripts.
 The first one is designed to run the installation with the following command:
 
-```bash <(wget -qO- https://raw.githubusercontent.com/Reddimes/ubuntu-zfsraid10/refs/heads/main/tools/install.sh)```
+```
+bash <(wget -qO- https://raw.githubusercontent.com/Reddimes/ubuntu-zfsraid10/refs/heads/main/tools/install.sh)
+```
 
 `init.sh` is meant to be our entrypoint and in fact the command above runs it as sudo.  This script wipes the filesystems, removes all partitions, and uses debootrap to install Ubuntu, it copies over as many config files as it can as well.  Then it launches the `chroot.sh` script.  The `chroot.sh` script sets up the defaults for the environment and it has a few hands on sections where you need to configure it just a little.
 
