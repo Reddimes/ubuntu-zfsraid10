@@ -180,7 +180,7 @@ install () {
 	# Networking setup
 	run_cmd "echo cloudstack | sudo tee /mnt/etc/hostname"
 	run_cmd "sed 's/ubuntu-server/cloudstack/' /etc/hosts > /mnt/etc/hosts"
-	run_cmd "cp /etc/netplan/50-cloud-init.yaml /mnt/netplan/50-cloud-init.yaml"
+	run_cmd "cp /etc/netplan/50-cloud-init.yaml /mnt/etc/netplan/50-cloud-init.yaml"
 
 	# Copy over apt configuration and keyrings.  Remove sources.list if it even exists.  I'm not sure.
 	run_cmd "cp /etc/apt/sources.list.d/ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources"
