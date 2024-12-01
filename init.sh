@@ -7,7 +7,7 @@ ls -A /dev/disk/by-id/ | sed '/-part/d;/usb/d' -
 
 DISKS=()
 
-echo "Disks to use. Enter an empty string to end: "
+echo -e "\nDisks to use. Enter an empty string to end: "
 
 while true
 do
