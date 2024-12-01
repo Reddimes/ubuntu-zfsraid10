@@ -124,21 +124,21 @@ fixfs () {
 
 additionalPrep () {
    echo "
-   We have opened bash in order for you to complete user setup.
-   I Personally do not recommend setting the root password,
-   but rather setting up a user such as the following:
+We have opened bash in order for you to complete user setup.
+I Personally do not recommend setting the root password,
+but rather setting up a user such as the following:
 
-      username=YOUR_USERNAME
+   username=YOUR_USERNAME
 
-      zfs create rpool/home/\$username
-      adduser \$username
+   zfs create rpool/home/\$username
+   adduser \$username
 
-      cp -a /etc/skel/. /home/\$username
-      chown -R \$username:\$username /home/\$username
-      usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username
+   cp -a /etc/skel/. /home/\$username
+   chown -R \$username:\$username /home/\$username
+   usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username
 
-   Once you have your user setup, just type exit in order to continue.
-   "
+Once you have your user setup, just type exit in order to continue.
+"
    bash
 }
 

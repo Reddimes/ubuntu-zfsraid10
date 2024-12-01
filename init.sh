@@ -167,7 +167,7 @@ createzpools () {
 }
 
 install () {
-	echo -n "Installing ubuntu on the hard drive..."
+	echo -n "Installing ubuntu on the zpools..."
 	run_cmd "debootstrap noble /mnt http://archive.ubuntu.com/ubuntu"
 	print_ok
 
@@ -238,13 +238,13 @@ postInstall () {
 	print_ok
 	
 	echo -n "
-	It may fail to export the rpool.  You will need to run the following in
-	the initramfs prompt:
+It may fail to export the rpool.  You will need to run the following in
+the initramfs prompt:
 
-			zpool import -f rpool
-			exit
+	zpool import -f rpool
+	exit
 
-	Press Enter to continue and reboot: "
+Press Enter to continue and reboot: "
 	read
 	run_cmd "reboot 0"
 }
