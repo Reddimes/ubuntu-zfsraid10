@@ -239,8 +239,8 @@ postInstall () {
 	
 	echo -e "\nIt may fail to export the rpool.  You will need to run the following in"
 	echo -e "the initramfs prompt:\n"
-	echo -e "\n\tzpool import -f rpool"
-	echo -e "\texit"
+	echo -e "\tzpool import -f rpool"
+	echo -e "\texit\n"
 	echo -n "Press Enter to continue and reboot: "
 	read
 	run_cmd "reboot 0"
