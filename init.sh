@@ -111,11 +111,11 @@ rpool "
 	echo -n "Wiping Filesystems, Zapping Partitions, and Creating New Partitions..."
 	for ((i=0; i<${#DISKS[@]}; i++))
 	do
-		run_cmd "wipefs -a /dev/disk/by-id/${DISK[i]}"
-		run_cmd "sgdisk --zap-all /dev/disk/by-id/${DISK[i]}"
-		run_cmd "sgdisk -n1:1M:+512M -t1:EF00 /dev/disk/by-id/${DISK[i]}"
-		run_cmd "sgdisk -n2:0:+1G -t2:BE00 /dev/disk/by-id/${DISK[i]}"
-		run_cmd "sgdisk -n3:0:0 -t3:BF00 /dev/disk/by-id/${DISK[i]}"
+		run_cmd "wipefs -a /dev/disk/by-id/${DISKS[i]}"
+		run_cmd "sgdisk --zap-all /dev/disk/by-id/${DISKS[i]}"
+		run_cmd "sgdisk -n1:1M:+512M -t1:EF00 /dev/disk/by-id/${DISKS[i]}"
+		run_cmd "sgdisk -n2:0:+1G -t2:BE00 /dev/disk/by-id/${DISKS[i]}"
+		run_cmd "sgdisk -n3:0:0 -t3:BF00 /dev/disk/by-id/${DISKS[i]}"
 	done
 
 	# Sleep to allow time for partitions to be detected by zpool
