@@ -265,6 +265,6 @@ prerequisites
 partition
 createzpools
 install
-# prepareChroot
+prepareChroot
 # runChroot
 # postInstall
