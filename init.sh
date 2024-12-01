@@ -52,8 +52,9 @@ rpool \
 
 for ((i=0; i<${#DISKS[@]}; i+=2))
 do
-	bpool+="mirror \\\n"
-	# ="/dev/disk/by-id/${DISKS[i]}"
+	bpool+="mirror "
+	bpool+="/dev/disk/by-id/${DISKS[i]} "
+	bpool+="/dev/disk/by-id/${DISKS[i+1]} "
 done
 
 echo $bpool
