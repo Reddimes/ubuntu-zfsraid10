@@ -53,11 +53,16 @@ rpool \
 for ((i=0; i<${#DISKS[@]}; i+=2))
 do
 	bpool+="mirror "
-	bpool+="/dev/disk/by-id/${DISKS[i]} "
-	bpool+="/dev/disk/by-id/${DISKS[i+1]} "
+	bpool+="/dev/disk/by-id/${DISKS[i]}-part2 "
+	bpool+="/dev/disk/by-id/${DISKS[i+1]}-part2 "
+
+	rpool+="mirror "
+	rpool+="/dev/disk/by-id/${DISKS[i]}-part3 "
+	rpool+="/dev/disk/by-id/${DISKS[i+1]}-part3 "
 done
 
 echo $bpool
+echo $rpool
 
 exit
 
