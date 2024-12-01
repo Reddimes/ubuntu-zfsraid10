@@ -129,22 +129,11 @@ additionalPrep () {
    then
       run_cmd "zfs create rpool/home/$ADMINUSER"
       run_cmd "cp -a /etc/skel/. /home/$ADMINUSER"
-      run_cmd "chown -R $ADMINUSER:$ADMINUSER /home/$ADMINUSER"
       run_cmd "adduser $ADMINUSER"
+      run_cmd "chown -R $ADMINUSER:$ADMINUSER /home/$ADMINUSER"
       run_cmd "usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video $ADMINUSER"
    fi
    passwd $ADMINUSER
-   # echo -e "\nWe have opened bash in order for you to complete user setup."
-   # echo "I Personally do not recommend setting the root password,"
-   # echo -e "but rather setting up a user such as the following:\n"
-   # echo -e "\tusername=YOUR_USERNAME\n"
-   # echo -e "\tzfs create rpool/home/\$username"
-   # echo -e "\tadduser \$username\n"
-   # echo -e "\tcp -a /etc/skel/. /home/\$username"
-   # echo -e "\tchown -R \$username:\$username /home/\$username"
-   # echo -e "\tusermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username\n"
-   # echo -e "Once you have your user setup, just type exit in order to continue.\n"
-   bash
 }
 
 # Main Script Execution
