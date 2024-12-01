@@ -128,10 +128,10 @@ additionalPrep () {
    if [ $ADMINUSER != root ]
    then
       run_cmd "zfs create rpool/home/$ADMINUSER"
-      run_cmd "cp -a /etc/skel/. /home/$username"
-      run_cmd "chown -R $username:$username /home/$username"
-      run_cmd "adduser $username"
-      run_cmd "usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video $username"
+      run_cmd "cp -a /etc/skel/. /home/$ADMINUSER"
+      run_cmd "chown -R $ADMINUSER:$ADMINUSER /home/$ADMINUSER"
+      run_cmd "adduser $ADMINUSER"
+      run_cmd "usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video $ADMINUSER"
    fi
    passwd $ADMINUSER
    # echo -e "\nWe have opened bash in order for you to complete user setup."
