@@ -222,7 +222,7 @@ postInstall () {
 	run_cmd "rm -f /mnt/chroot.sh"
 	print_ok
 
-	echo -n " Copying over first_boot.sh..."
+	echo -n "Copying over first_boot.sh..."
 	run_cmd "cp ./first_boot.sh /mnt/etc/profile.d/first_boot.sh"
 	print_ok
 
