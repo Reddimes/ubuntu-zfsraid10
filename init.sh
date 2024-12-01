@@ -3,7 +3,7 @@
 # Gather user input
 clear
 echo -e "Here is the list of disks installed on your system: -part is ignored and usb is ignored:"
-ls -lA /dev/disk/by-id/ | sed '/-part/d;/usb/d' -
+ls -A /dev/disk/by-id/ | sed '/-part/d;/usb/d' -
 
 DISKS=()
 
