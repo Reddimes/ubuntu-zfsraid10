@@ -31,6 +31,8 @@ do
 done
 
 echo -ne "\nEnter the desired hostname[hostname:-testing]: "
+
+unset HOSTNAME
 read HOSTNAME
 HOSTNAME=${HOSTNAME:-ubuntu-server}
 echo $hostname
