@@ -128,8 +128,8 @@ additionalPrep () {
    if [ $ADMINUSER != root ]
    then
       run_cmd "zfs create rpool/home/$ADMINUSER"
-      run_cmd "cp -a /etc/skel/. /home/$ADMINUSER"
       run_cmd "adduser $ADMINUSER"
+      run_cmd "cp -a /etc/skel/. /home/$ADMINUSER"
       run_cmd "chown -R $ADMINUSER:$ADMINUSER /home/$ADMINUSER"
       run_cmd "usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video $ADMINUSER"
    fi
