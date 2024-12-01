@@ -30,13 +30,10 @@ do
 	DISKS+=($input)
 done
 
-echo -ne "\nEnter the desired hostname[hostname:-testing]: "
-
+echo -ne "\nEnter the desired hostname[ubuntu-server]: "
 unset HOSTNAME
 read HOSTNAME
 HOSTNAME=${HOSTNAME:-ubuntu-server}
-echo $HOSTNAME
-exit
 
 
 # Function to handle errors
@@ -201,9 +198,16 @@ install () {
 	run_cmd "cp /etc/zfs/zpool.cache /mnt/etc/zfs/"
 
 	# Networking setup
-	run_cmd "echo $hostname > /mnt/etc/hostname"
-	run_cmd "sed 's/ubuntu-server/$hostname' /etc/hosts > /mnt/etc/hosts"
-	run_cmd "cp /etc/netplan/50-cloud-init.yaml /mnt/etc/netplan/50-cloud-init.yaml"
+	run_cmd "echo $HOSTNAME > /mnt/etc/hostname"
+	run_cmd "sed 's/ubuntu-server/$hostname/' /etc/hosts > /mnt/etc/hosts"
+
+	# Check for custom config and add it, otherwise use the live cd's yaml.
+	if [ -f ./50-cloud-init.yaml ]
+	then
+		run_cmd "cp ./50-cloud-init.yaml /mnt/etc/netplan/50-cloud-init.yaml"
+	else
+		run_cmd "cp /etc/netplan/50-cloud-init.yaml /mnt/etc/netplan/50-cloud-init.yaml"
+	fi
 
 	# Copy over apt configuration and keyrings.  Remove sources.list if it even exists.  I'm not sure.
 	run_cmd "cp /etc/apt/sources.list.d/ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources"

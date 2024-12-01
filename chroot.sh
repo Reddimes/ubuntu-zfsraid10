@@ -119,23 +119,36 @@ fixfs () {
    sed -Ei "s|/mnt/?|/|" /etc/zfs/zfs-list.cache/*
 }
 
+# This whole section needs to be redone I think.
 additionalPrep () {
-   echo -e "\nWe have opened bash in order for you to complete user setup."
-   echo "I Personally do not recommend setting the root password,"
-   echo -e "but rather setting up a user such as the following:\n"
-
-   echo -e "\tusername=YOUR_USERNAME\n"
-   echo -e "\tzfs create rpool/home/\$username"
-   echo -e "\tadduser \$username\n"
-   echo -e "\tcp -a /etc/skel/. /home/\$username"
-   echo -e "\tchown -R \$username:\$username /home/\$username"
-   echo -e "\tusermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username\n"
-   echo -e "Once you have your user setup, just type exit in order to continue.\n"
+   echo -n "Enter Desired Username[root]: "
+   unset ADMINUSER
+   read ADMINUSER
+   ADMINUSER=${ADMINUSER:-root}
+   if [ $ADMINUSER != root ]
+   then
+      run_cmd "zfs create rpool/home/$ADMINUSER"
+      run_cmd "cp -a /etc/skel/. /home/$username"
+      run_cmd "chown -R $username:$username /home/$username"
+      run_cmd "adduser $username"
+      run_cmd "usermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video $username"
+   fi
+   passwd $ADMINUSER
+   # echo -e "\nWe have opened bash in order for you to complete user setup."
+   # echo "I Personally do not recommend setting the root password,"
+   # echo -e "but rather setting up a user such as the following:\n"
+   # echo -e "\tusername=YOUR_USERNAME\n"
+   # echo -e "\tzfs create rpool/home/\$username"
+   # echo -e "\tadduser \$username\n"
+   # echo -e "\tcp -a /etc/skel/. /home/\$username"
+   # echo -e "\tchown -R \$username:\$username /home/\$username"
+   # echo -e "\tusermod -a -G audio,cdrom,dip,floppy,netdev,plugdev,sudo,video \$username\n"
+   # echo -e "Once you have your user setup, just type exit in order to continue.\n"
    bash
 }
 
 # Main Script Execution
-prerequisites
-bigboot
-fixfs
+# prerequisites
+# bigboot
+# fixfs
 additionalPrep
