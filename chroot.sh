@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo $DISK
+exit
+
 # Function to handle errors
 error_handler () {
     local exit_code=$?

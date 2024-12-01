@@ -264,7 +264,7 @@ postInstall () {
 prerequisites
 partition
 createzpools
-# install
+install
 # prepareChroot
 # runChroot
 # postInstall
