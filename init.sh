@@ -30,6 +30,11 @@ do
 	DISKS[$i]="/dev/disk/by-id/${DISKS[i]}"
 done
 
+for ((i=0; i<${#DISKS[@]}; i++))
+do
+	echo ${DISKS[i]}
+done
+
 exit
 
 # Function to handle errors
