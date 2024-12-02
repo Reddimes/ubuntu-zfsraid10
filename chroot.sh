@@ -133,7 +133,7 @@ additionalPrep () {
       run_cmd "chown -R $ADMINUSER:$ADMINUSER /home/$ADMINUSER"
       run_cmd "usermod -a -G audio,cdrom,dip,floppy,plugdev,sudo,video $ADMINUSER"
    else
-      passwd $ADMINUSER
+      passwd
    fi
 }
 
