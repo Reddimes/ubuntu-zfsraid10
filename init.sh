@@ -30,12 +30,12 @@ do
 	DISKS+=($input)
 done
 
-echo -ne "\nEnter Desired Hostname[ubuntu-server]: "
+echo -ne "\nEnter Desired Hostname[cloudstack]: "
 unset HOSTNAME
 read HOSTNAME
-HOSTNAME=${HOSTNAME:-ubuntu-server}
+HOSTNAME=${HOSTNAME:-cloudstack}
 
-echo -n "Enter Desired Username[ubuntu-server]: "
+echo -n "Enter Desired Username[cloudstack]: "
 unset ADMINUSER
 read ADMINUSER
 ADMINUSER=${ADMINUSER:-ubuntu-server}
