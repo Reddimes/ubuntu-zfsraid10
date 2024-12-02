@@ -118,7 +118,7 @@ fixfs () {
 
 # This whole section needs to be redone I think.
 additionalPrep () {
-   if [ $ADMINUSER != root ]
+   if [ $ADMINUSER != "root" ]
    then
       run_cmd "zfs create rpool/home/$ADMINUSER"
       adduser $ADMINUSER

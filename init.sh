@@ -209,31 +209,10 @@ install () {
 	run_cmd "echo $HOSTNAME > /mnt/etc/hostname"
 	run_cmd "sed 's/ubuntu-server/$hostname/' /etc/hosts > /mnt/etc/hosts"
 
-	# Check for custom config and add it, otherwise use the live cd's yaml.
-	if [ -f ./50-cloud-init.yaml ]
-	then
-		run_cmd "cp ./50-cloud-init.yaml /mnt/etc/netplan/50-cloud-init.yaml"
-	else
-		run_cmd "cp /etc/netplan/50-cloud-init.yaml /mnt/etc/netplan/50-cloud-init.yaml"
-	fi
-
 	# Copy over apt configuration and keyrings.  Remove sources.list if it even exists.  I'm not sure.
-	run_cmd "cp /etc/apt/sources.list.d/ubuntu.sources /mnt/etc/apt/sources.list.d/ubuntu.sources"
 	run_cmd "cp /usr/share/keyrings/ubuntu-archive-keyring.gpg /mnt/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 	run_cmd "rm -f /mnt/etc/apt/sources.list"
-
-	# Copy over zpool import service which accounts for pre and post execution.
-	run_cmd "cp ./zfs-import-bpool.service /mnt/etc/systemd/system/zfs-import-bpool.service"
-	
-	# Copy over script to be run in chroot
-	run_cmd "cp ./chroot.sh /mnt/chroot.sh"
-
-	# Copy over debug grub file
-	run_cmd "cp ./grub /mnt/etc/default/grub"
-	
-	# Copy over grub configuration.
-	########## Needs to be setup test
-	
+	run_cmd "cp -r ./Files /mnt/"
 	print_ok
 }
 
@@ -270,10 +249,10 @@ postInstall () {
 	zpool export -a &> /dev/null
 	print_ok
 	
-	echo -e "\nIt may fail to export the rpool.  You will need to run the following in"
-	echo -e "the initramfs prompt:\n"
+	echo -e "It may fail to export the rpool.  You will need to run the following in"
+	echo -e "the initramfs prompt:"
 	echo -e "\tzpool import -f rpool"
-	echo -e "\texit\n"
+	echo -e "\texit"
 	echo -n "Press Enter to continue and reboot: "
 	read
 	run_cmd "reboot 0"
