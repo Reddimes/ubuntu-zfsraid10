@@ -212,7 +212,7 @@ install () {
 	# Copy over apt configuration and keyrings.  Remove sources.list if it even exists.  I'm not sure.
 	run_cmd "cp /usr/share/keyrings/ubuntu-archive-keyring.gpg /mnt/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 	run_cmd "rm -f /mnt/etc/apt/sources.list"
-	run_cmd "cp -r ./Files /mnt/"
+	run_cmd "cp -r ./Plan/* /mnt/"
 	print_ok
 }
 
