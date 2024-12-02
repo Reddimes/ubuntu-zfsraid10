@@ -2,12 +2,15 @@
 
 # Gather user input
 clear
-echo -e "Here is the list of disks installed on your system: -part is ignored and usb is ignored:"
-ls -A /dev/disk/by-id/ | sed '/-part/d;/usb/d' -
+echo "Here is the list of disks installed on your system:"
+echo -e "\tPartitions are ignored, USB is ignored, and "
+echo -e "\tSCSI drives are ignored as Ubuntu 24.04 doesn't load them automatically."
+ls -A /dev/disk/by-id/ | sed '/-part/d;/usb/d;/scsi/d'
 
 DISKS=()
 
-echo -e "\nDisks to use. Copy and paste from above. Enter an empty string to end: "
+echo -e "\nDisks to use:"
+echo -e "\tCopy and paste from above. Enter an empty string to end: "
 # Gather DISKS for use.
 while true
 do
@@ -30,15 +33,15 @@ do
 	DISKS+=($input)
 done
 
-echo -ne "\nEnter Desired Hostname[cloudstack]: "
+echo -ne "\nEnter Desired Hostname[ubuntu-server]: "
 unset HOSTNAME
 read HOSTNAME
-HOSTNAME=${HOSTNAME:-cloudstack}
+HOSTNAME=${HOSTNAME:-ubuntu-server}
 
-echo -n "Enter Desired Username[cloudstack]: "
+echo -n "Enter Desired Username[ubuntu-server]: "
 unset ADMINUSER
 read ADMINUSER
-ADMINUSER=${ADMINUSER:-cloudstack}
+ADMINUSER=${ADMINUSER:-ubuntu-server}
 
 
 # Function to handle errors
