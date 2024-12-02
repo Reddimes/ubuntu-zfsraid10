@@ -209,7 +209,7 @@ install () {
 	run_cmd "echo $HOSTNAME > /mnt/etc/hostname"
 	run_cmd "sed 's/ubuntu-server/$hostname/' /etc/hosts > /mnt/etc/hosts"
 
-	# Copy over apt configuration and keyrings.  Remove sources.list if it even exists.  I'm not sure.
+	# Copy over apt ubuntu-archive-keyring.gpg and copy over other planned files.
 	run_cmd "cp /usr/share/keyrings/ubuntu-archive-keyring.gpg /mnt/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 	run_cmd "rm -f /mnt/etc/apt/sources.list"
 	run_cmd "cp -r ./Plan/* /mnt/"
