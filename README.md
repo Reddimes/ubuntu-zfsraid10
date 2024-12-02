@@ -1,4 +1,4 @@
-# ubuntu-zfsraid10
+# ZFS RAID 10
 The purpose of this repository is to automatically setup a booting zfs ubuntu host.  The fastest way to get it running is as follows:
 ```
 bash <(wget -qO- https://raw.githubusercontent.com/Reddimes/ubuntu-zfsraid10/refs/heads/main/tools/install.sh)
