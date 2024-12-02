@@ -35,6 +35,11 @@ unset HOSTNAME
 read HOSTNAME
 HOSTNAME=${HOSTNAME:-ubuntu-server}
 
+echo -n "Enter Desired Username[ubuntu-server]: "
+unset ADMINUSER
+read ADMINUSER
+ADMINUSER=${ADMINUSER:-ubuntu-server}
+
 
 # Function to handle errors
 error_handler() {
@@ -238,7 +243,7 @@ prepareChroot () {
 
 runChroot () {
 	echo -e "\nRunning chroot:"
-	chroot /mnt /usr/bin/env DISK="/dev/disk/by-id/${DISKS[0]}" bash -c \"/chroot.sh\" --login
+	chroot /mnt /usr/bin/env DISK="/dev/disk/by-id/${DISKS[0]}" ADMINUSER=$ADMINUSER bash -c \"/chroot.sh\" --login
 	echo "Done!"
 }
 

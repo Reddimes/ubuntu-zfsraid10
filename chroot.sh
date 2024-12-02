@@ -73,9 +73,6 @@ bigboot () {
    # Add service for zfs import of the bpool
    run_cmd "systemctl enable zfs-import-bpool.service"
 
-   # Change to allow root to login to the server over ssh for server setup.
-   run_cmd "sed -i '/#PermitRootLogin/a PermitRootLogin yes' /etc/ssh/sshd_config"
-
    # Reset initramfs to use the added boot partition.
    run_cmd "update-initramfs -c -k all"
 
@@ -121,10 +118,6 @@ fixfs () {
 
 # This whole section needs to be redone I think.
 additionalPrep () {
-   echo -n "Enter Desired Username[root]: "
-   unset ADMINUSER
-   read ADMINUSER
-   ADMINUSER=${ADMINUSER:-root}
    if [ $ADMINUSER != root ]
    then
       run_cmd "zfs create rpool/home/$ADMINUSER"
