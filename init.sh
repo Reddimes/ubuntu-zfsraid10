@@ -30,7 +30,7 @@ do
 	DISKS+=($input)
 done
 
-echo -ne "\nEnter the desired hostname[ubuntu-server]: "
+echo -ne "\nEnter Desired Hostname[ubuntu-server]: "
 unset HOSTNAME
 read HOSTNAME
 HOSTNAME=${HOSTNAME:-ubuntu-server}
