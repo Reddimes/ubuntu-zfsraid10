@@ -38,7 +38,7 @@ HOSTNAME=${HOSTNAME:-cloudstack}
 echo -n "Enter Desired Username[cloudstack]: "
 unset ADMINUSER
 read ADMINUSER
-ADMINUSER=${ADMINUSER:-ubuntu-server}
+ADMINUSER=${ADMINUSER:-cloudstack}
 
 
 # Function to handle errors
