@@ -83,7 +83,7 @@ bigboot () {
    print_ok
 }
 
-fixfs () {
+additionalPrep () {
    echo -n "Fix Filesystem mounting order..."
    run_cmd "mkdir /etc/zfs/zfs-list.cache"
    run_cmd "touch /etc/zfs/zfs-list.cache/bpool"
@@ -110,14 +110,7 @@ fixfs () {
       fi
       ((LOOP++))
    done
-   kill $ZEDPID
 
-   # Fix Mount paths
-   sed -Ei "s|/mnt/?|/|" /etc/zfs/zfs-list.cache/*
-}
-
-# This whole section needs to be redone I think.
-additionalPrep () {
    if [ $ADMINUSER != "root" ]
    then
       run_cmd "zfs create rpool/home/$ADMINUSER"
@@ -130,10 +123,14 @@ additionalPrep () {
    else
       passwd
    fi
+
+   kill $ZEDPID
+
+   # Fix Mount paths supposedly
+   sed -Ei "s|/mnt/?|/|" /etc/zfs/zfs-list.cache/*
 }
 
 # Main Script Execution
 prerequisites
 bigboot
-fixfs
 additionalPrep
