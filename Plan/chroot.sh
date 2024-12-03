@@ -114,8 +114,6 @@ additionalPrep () {
    bash
    if [ $ADMINUSER != "root" ]
    then
-      run_cmd "zfs create rpool/home/$ADMINUSER"
-      sleep 2
       adduser $ADMINUSER
       sleep 2
       run_cmd "cp -a /etc/skel/. /home/$ADMINUSER"
