@@ -110,8 +110,7 @@ additionalPrep () {
       fi
       ((LOOP++))
    done
-   echo "Testing user creation: "
-   bash
+
    if [ $ADMINUSER != "root" ]
    then
       adduser $ADMINUSER
@@ -127,8 +126,6 @@ additionalPrep () {
 
    # Fix Mount paths supposedly
    sed -Ei "s|/mnt/?|/|" /etc/zfs/zfs-list.cache/*
-   echo "Testing user creation: "
-   bash
 }
 
 # Main Script Execution
