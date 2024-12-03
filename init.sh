@@ -157,6 +157,10 @@ createzpools () {
 	## This creates a few extra mounts to isolate data from the rest of linux.
 	## Take a look at whether you need them or not.
 	run_cmd "zfs create                     rpool/home"
+	if [ $ADMINUSER != "root" ]
+	then
+		run_cmd "zfs create                     rpool/home/$ADMINUSER"
+	fi
 	run_cmd "zfs create -o mountpoint=/root rpool/home/root"
 
 	# Set permissions for root to be only intended for root.
