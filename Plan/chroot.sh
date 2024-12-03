@@ -110,7 +110,8 @@ additionalPrep () {
       fi
       ((LOOP++))
    done
-
+   echo "Testing user creation: "
+   bash
    if [ $ADMINUSER != "root" ]
    then
       run_cmd "zfs create rpool/home/$ADMINUSER"
@@ -128,6 +129,8 @@ additionalPrep () {
 
    # Fix Mount paths supposedly
    sed -Ei "s|/mnt/?|/|" /etc/zfs/zfs-list.cache/*
+   echo "Testing user creation: "
+   bash
 }
 
 # Main Script Execution
