@@ -23,24 +23,38 @@ You'll notice some other default files which you can either edit or delete:
 
 `./Plan/etc/apt/sources.list`
 > This is meant for if you want to customize what apt sources are available to you.  It's currently empty, but I wanted to provide a file in it's place in case it is needed for your installation.
----
+
+&nbsp;
+
 `./Plan/etc/apt/sources.list.d/ubuntu.sources`
 > This is the default sources that are provided by the Live CD, I've just broken it out so you can either use it or customize it.
----
+
+&nbsp;
+
 `./Plan/etc/apt/trusted.gpg.d/`
 > In case you are adding any additional sources and also need to have the gpg keys installed.
----
+
+&nbsp;
+
 `./Plan/etc/default/grub`
 > This file is a customized grub config to account for the ZFS installation and also set grub to use debug mode by default.
----
+
+&nbsp;
+
 `./Plan/etc/netplan/50-cloud-init.yaml`
 > The default netplan ripped straight out of the Live CD.  If you need to use your own netplan(for a static ip or vlans), go ahead and edit it.
----
+
+&nbsp;
+
 `./Plan/etc/systemd/system/zfs-import-bpool.service`
 > This service is meant to properly import the bpool(/boot) and is kind of necessary.
----
+
+&nbsp;
+
 `./Plan/chroot.sh`
  > This particular script is temporary.  It is meant to be run inside of the chroot into the ZFS installation before the first boot.  Once it has run, it gets deleted.
+
+&nbsp;
 
 ## Architecture
 This particular script is designed to create two seperate zpools: /boot and /.  The grub requirements limit the other features of ZFS and I would rather that we are able to utilize them.  This is designed specifically for a ZFS RAID 10, but you can customize it to whatever works best for you.  You should also note that it is designed to be UEFI, **not legacy**.  For a legacy install, you need to change `./init.sh` to partition the drive properly and a whole bunch of other stuff that I'm happy to answer questions on, but too lazy to look up at the moment.
