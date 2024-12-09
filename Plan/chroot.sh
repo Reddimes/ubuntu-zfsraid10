@@ -39,7 +39,7 @@ prerequisites () {
    run_cmd "apt update"
    run_cmd "apt install --yes console-setup locales vim systemd-timesyncd dosfstools \
 dpkg-dev linux-headers-generic linux-image-generic zfs-initramfs openssh-server \
-tmux"
+tmux sudo"
    run_cmd "apt purge --yes os-prober"
    print_ok
 

@@ -18,30 +18,25 @@ do
 	read input
 	if [[ $input = "" ]]
 	then
-		if ((${#DISKS[@]} >= 4))
+		if ((${#DISKS[@]} >= 3))
 		then
-			if ((${#DISKS[@]} % 2 == 0))
-			then
-				break
-			else
-				echo "You need an even number of disks for a ZFS RAID 10."
-			fi
+			break
 		else
-			echo "You need at least 4 disks for a ZFS RAID 10."
+			echo "You need at least 3 disks for a RAIDz1."
 		fi
 	fi
 	DISKS+=($input)
 done
 
-echo -ne "\nEnter Desired Hostname[ubuntu-server]: "
+echo -ne "\nEnter Desired Hostname[debian-server]: "
 unset HOSTNAME
 read HOSTNAME
-HOSTNAME=${HOSTNAME:-ubuntu-server}
+HOSTNAME=${HOSTNAME:-debian-server}
 
-echo -n "Enter Desired Username[ubuntu-server]: "
+echo -n "Enter Desired Username[debian-server]: "
 unset ADMINUSER
 read ADMINUSER
-ADMINUSER=${ADMINUSER:-ubuntu-server}
+ADMINUSER=${ADMINUSER:-debian-server}
 
 
 # Function to handle errors
@@ -94,7 +89,8 @@ partition () {
 -O normalization=formD \
 -O relatime=on \
 -O canmount=off -O mountpoint=/boot -R /mnt \
-bpool "
+bpool \
+raidz1 "
 
 # Initial rpool Creation
 	rpool="zpool create \
@@ -105,18 +101,14 @@ bpool "
 -O normalization=formD \
 -O relatime=on \
 -O canmount=off -O mountpoint=/ -R /mnt \
-rpool "
+rpool \
+raidz1 "
 
 	# Customize with user entered Disks
 	for ((i=0; i<${#DISKS[@]}; i+=2))
 	do
-		bpool+="mirror "
 		bpool+="/dev/disk/by-id/${DISKS[i]}-part2 "
-		bpool+="/dev/disk/by-id/${DISKS[i+1]}-part2 "
-
-		rpool+="mirror "
 		rpool+="/dev/disk/by-id/${DISKS[i]}-part3 "
-		rpool+="/dev/disk/by-id/${DISKS[i+1]}-part3 "
 	done
 	bpool+="-f"
 	rpool+="-f"
@@ -148,11 +140,11 @@ createzpools () {
 	# zpool configuration
 	run_cmd "zfs create -o canmount=off -o mountpoint=none rpool/ROOT"
 	run_cmd "zfs create -o canmount=off -o mountpoint=none bpool/BOOT"
-	run_cmd "zfs create -o canmount=noauto -o mountpoint=/ rpool/ROOT/ubuntu"
+	run_cmd "zfs create -o canmount=noauto -o mountpoint=/ rpool/ROOT/debian"
 
 	# Mount pool 
-	run_cmd "zfs mount rpool/ROOT/ubuntu"
-	run_cmd "zfs create -o mountpoint=/boot bpool/BOOT/ubuntu"
+	run_cmd "zfs mount rpool/ROOT/debian"
+	run_cmd "zfs create -o mountpoint=/boot bpool/BOOT/debian"
 
 	## This creates a few extra mounts to isolate data from the rest of linux.
 	## Take a look at whether you need them or not.
@@ -200,7 +192,7 @@ createzpools () {
 
 install () {
 	echo -n "Installing ubuntu on the zpools..."
-	run_cmd "debootstrap noble /mnt http://archive.ubuntu.com/ubuntu"
+	run_cmd "debootstrap bookworm /mnt https://deb.debian.org/debian"
 	print_ok
 
 	echo -n "Copying over files..."
@@ -214,8 +206,8 @@ install () {
 	run_cmd "sed 's/ubuntu-server/$hostname/' /etc/hosts > /mnt/etc/hosts"
 
 	# Copy over apt ubuntu-archive-keyring.gpg and copy over other planned files.
-	run_cmd "cp /usr/share/keyrings/ubuntu-archive-keyring.gpg /mnt/usr/share/keyrings/ubuntu-archive-keyring.gpg"
-	run_cmd "rm -f /mnt/etc/apt/sources.list"
+	# run_cmd "cp /usr/share/keyrings/ubuntu-archive-keyring.gpg /mnt/usr/share/keyrings/ubuntu-archive-keyring.gpg"
+	# run_cmd "rm -f /mnt/etc/apt/sources.list"
 	run_cmd "cp -r ./Plan/* /mnt/"
 	print_ok
 }
@@ -243,8 +235,8 @@ postInstall () {
 	print_ok
 
 	echo -n "Creating Installation Snapshot..."
-	run_cmd "zfs snapshot bpool/BOOT/ubuntu@install"
-	run_cmd "zfs snapshot rpool/ROOT/ubuntu@install"
+	run_cmd "zfs snapshot bpool/BOOT/debian@install"
+	run_cmd "zfs snapshot rpool/ROOT/debian@install"
 	print_ok
 
 	echo -n "Attempting to unmount and export zfs..."
