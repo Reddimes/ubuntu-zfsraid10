@@ -5,7 +5,7 @@ The purpose of this repository is to automatically setup a booting zfs ubuntu ho
 It is best to run these scripts from an Ubuntu Live Instance, preferably ubuntu-server as it is all that I have tested thus far.  It may work with other Ubuntu Distributions as well.
 I Personally used the instance from this link: https://ubuntu.com/download/server/.
 
-Here is the command you need to get this started.
+Here is the command you need to get this started.  Note: This only applies to the main distirbution.  I need to customize the script to allow for this new branch.
 ```
 bash <(wget -qO- https://raw.githubusercontent.com/Reddimes/ubuntu-zfsraid10/refs/heads/main/tools/install.sh)
 ```
