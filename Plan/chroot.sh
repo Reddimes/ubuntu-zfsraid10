@@ -79,7 +79,7 @@ bigboot () {
    # Grub setup
    run_cmd "update-grub"
    run_cmd "grub-install --target=x86_64-efi --efi-directory=/boot/efi \
-      --bootloader-id=ubuntu --recheck --no-floppy"
+      --bootloader-id=debian --recheck --no-floppy"
    print_ok
 }
 
@@ -99,8 +99,8 @@ additionalPrep () {
    do
       if [ $LOOP -lt 1 ]
       then
-         zfs set canmount=on bpool/BOOT/ubuntu
-         zfs set canmount=noauto rpool/ROOT/ubuntu
+         zfs set canmount=on bpool/BOOT/debian
+         zfs set canmount=noauto rpool/ROOT/debian
       else
          kill $ZEDPID
          sleep 1
