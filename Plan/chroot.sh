@@ -48,7 +48,7 @@ tmux sudo"
 
    # Need to research exactly what this does, but was part of the tutorial I used to put this together.
    # It doesn't seem to work with Ubuntu
-   # echo REMAKE_INITRD=yes > /etc/dkms/zfs.conf
+   echo REMAKE_INITRD=yes > /etc/dkms/zfs.conf
    print_ok
 }
 
