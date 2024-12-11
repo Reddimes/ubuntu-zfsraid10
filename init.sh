@@ -2,15 +2,15 @@
 
 # Gather user input
 clear
-echo "Here is the list of disks installed on your system:"
-echo -e "\tPartitions are ignored, USB is ignored, and "
-echo -e "\tSCSI drives are ignored as Ubuntu 24.04 doesn't load them automatically."
+echo "### Here is the list of disks installed on your system:"
+echo -e "Partitions are ignored, USB is ignored, and "
+echo -e "SCSI drives are ignored as Ubuntu 24.04 doesn't load them automatically."
 ls -A /dev/disk/by-id/ | sed '/-part/d;/usb/d;/scsi/d'
 
 DISKS=()
 
 echo -e "\nDisks to use:"
-echo -e "\tCopy and paste from above. Enter an empty string to end: "
+echo -e "Copy and paste from above. Enter an empty string to end: "
 # Gather DISKS for use.
 while true
 do
@@ -92,7 +92,7 @@ partition () {
 bpool \
 raidz1 "
 
-# Initial rpool Creation
+	# Initial rpool Creation
 	rpool="zpool create \
 -o ashift=12 \
 -o autotrim=on \
@@ -105,7 +105,7 @@ rpool \
 raidz1 "
 
 	# Customize with user entered Disks
-	for ((i=0; i<${#DISKS[@]}; i+=2))
+	for ((i=0; i<${#DISKS[@]}; i+=1))
 	do
 		bpool+="/dev/disk/by-id/${DISKS[i]}-part2 "
 		rpool+="/dev/disk/by-id/${DISKS[i]}-part3 "
