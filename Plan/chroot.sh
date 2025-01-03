@@ -70,7 +70,7 @@ bigboot () {
    print_ok
 
    # Mount /boot/efi to install grub
-   echo -n "Mounting and installing efi..."
+   echo -n "Mounting and Installing grub-efi..."
    run_cmd "mount /boot/efi"
    sleep 5
    run_cmd "apt install --yes grub-efi-amd64 shim-signed"
