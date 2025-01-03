@@ -66,12 +66,13 @@ bigboot () {
       /boot/efi vfat defaults 0 0 >> /etc/fstab"
 
    # Wait for fstab to write
-   sleep 2
+   sleep 5
    print_ok
 
    # Mount /boot/efi to install grub
    echo -n "Mounting and installing efi..."
    run_cmd "mount /boot/efi"
+   sleep 5
    run_cmd "apt install --yes grub-efi-amd64 shim-signed"
    print_ok
 
