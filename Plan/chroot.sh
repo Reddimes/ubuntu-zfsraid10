@@ -53,22 +53,27 @@ tmux sudo"
 }
 
 bigboot () {
-   echo -n "Setup boot device integration..."
+   echo -n "Formatting Boot Partition..."
 
    # Create Boot partition
    run_cmd "mkdosfs -F 32 -s 1 -n EFI ${DISK}-part1"
    run_cmd "mkdir /boot/efi"
+   print_ok
    
    # Add to fstab
+   echo -n "Adding to fstab..."
    run_cmd "echo /dev/disk/by-uuid/$(blkid -s UUID -o value ${DISK}-part1) \
       /boot/efi vfat defaults 0 0 >> /etc/fstab"
 
    # Wait for fstab to write
    sleep 2
+   print_ok
 
    # Mount /boot/efi to install grub
+   echo -n "Mounting and installing efi..."
    run_cmd "mount /boot/efi"
    run_cmd "apt install --yes grub-efi-amd64 shim-signed"
+   print_ok
 
    # Add service for zfs import of the bpool
    run_cmd "systemctl enable zfs-import-bpool.service"
@@ -77,6 +82,7 @@ bigboot () {
    run_cmd "update-initramfs -c -k all"
 
    # Grub setup
+   echo -n "Updating grub and installing grub-efi..."
    run_cmd "update-grub"
    run_cmd "grub-install --target=x86_64-efi --efi-directory=/boot/efi \
       --bootloader-id=debian --recheck --no-floppy"
